@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useStore from "../../store"
 
 function CurrenciesTable() {
   const { dataCurrencies, fetchCurrencies } = useStore();
+  const [limit, setLimit] = useState(10);
 
   useEffect(() => {
     fetchCurrencies();
@@ -41,7 +42,7 @@ function CurrenciesTable() {
                   </tr>
               </thead>
               <tbody>
-                {dataCurrencies.map((currency) => (
+                {dataCurrencies.slice(0, limit).map((currency) => (
                   <tr key={currency.id} className="bg-gray-50 border-b">
                     <th scope="row" key={currency.id} className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap">
                       {currency.rank}
@@ -78,6 +79,14 @@ function CurrenciesTable() {
               </tbody>
           </table>
       </div>
+        {limit < dataCurrencies.length && (
+            <button
+              onClick={() => setLimit(limit + 10)}
+              className="block mx-auto my-4 px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
+            >
+              Load More
+            </button>
+        )}
     </div>
   )
 }
