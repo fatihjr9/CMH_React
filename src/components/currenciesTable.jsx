@@ -1,5 +1,13 @@
+import { useEffect } from "react";
+import useStore from "../../store"
 
 function CurrenciesTable() {
+  const { dataCurrencies, fetchCurrencies } = useStore();
+
+  useEffect(() => {
+    fetchCurrencies();
+  }, []);
+
   return (
     <div>
       <div className="relative overflow-x-auto rounded-md">
@@ -33,38 +41,40 @@ function CurrenciesTable() {
                   </tr>
               </thead>
               <tbody>
-                  <tr className="bg-gray-50 border-b">
-                      <th scope="row" className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap">
-                          1
-                      </th>
-                      <th scope="row" className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap">
-                        <div className="flex flex-row gap-x-2 items-center">
-                          <div className="w-10 h-10 rounded-full bg-blue-100"></div>
-                          <div className="flex flex-col gap-y">
-                            <h5 className="text-base font-medium">Bitcoin</h5>
-                            <p className="text-sm font-normal text-gray-400">BTC</p>
-                          </div>
+                {dataCurrencies.map((currency) => (
+                  <tr key={currency.id} className="bg-gray-50 border-b">
+                    <th scope="row" key={currency.id} className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap">
+                      {currency.rank}
+                    </th>
+                    <th scope="row" className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap">
+                      <div className="flex flex-row gap-x-2 items-center">
+                        <div className="w-10 h-10 rounded-full bg-blue-100"></div>
+                        <div className="flex flex-col gap-y">
+                          <h5 className="text-base font-medium">{currency.name}</h5>
+                          <p className="text-sm font-normal text-gray-400">{currency.symbol}</p>
                         </div>
-                      </th>
-                      <td className="px-6 py-3">
-                        $25,777.41
-                      </td>
-                      <td className="px-6 py-3">
-                        $502.09b
-                      </td>
-                      <td className="px-6 py-3">
-                        $25,678.59
-                      </td>
-                      <td className="px-6 py-3">
-                        19.48m
-                      </td>
-                      <td className="px-6 py-3">
-                        $2.89b
-                      </td>
-                      <td className="px-6 py-3">
-                        0.04%
-                      </td>
+                      </div>
+                    </th>
+                    <td className="px-6 py-3">
+                      {currency.priceUsd}
+                    </td>
+                    <td className="px-6 py-3">
+                      {currency.marketCapUsd}
+                    </td>
+                    <td className="px-6 py-3">
+                      {currency.vwap24Hr}
+                    </td>
+                    <td className="px-6 py-3">
+                      {currency.supply}
+                    </td>
+                    <td className="px-6 py-3">
+                      {currency.volumeUsd24Hr}
+                    </td>
+                    <td className="px-6 py-3">
+                      {currency.changePercent24Hr}%
+                    </td>
                   </tr>
+                ))}
               </tbody>
           </table>
       </div>
