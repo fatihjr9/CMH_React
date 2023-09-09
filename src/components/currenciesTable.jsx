@@ -6,7 +6,7 @@ function CurrenciesTable() {
 
   useEffect(() => {
     fetchCurrencies();
-  }, []);
+  }, [fetchCurrencies]);
 
   return (
     <div>
