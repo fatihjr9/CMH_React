@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Banner from "./banner";
 import { CgMenuMotion } from 'react-icons/cg'
 import { Input, Dropdown, Button, Drawer } from 'antd';
 
 const Navbar = () => {
+      const location = useLocation()
       const [open, setOpen] = useState(false);
       const [placement] = useState('top');
       const showDrawer = () => {
@@ -50,8 +51,8 @@ const Navbar = () => {
                   <div className="md:flex flex-row items-center gap-x-6">
                       <h5 className="text-xl font-semibold tracking-tighter">CoinDataHub</h5>
                       <div className="flex flex-row items-center gap-x-4">
-                          <Link to="/" className="text-sm">Cryptocurrencies</Link>
-                          <Link to="/exchanges" className="text-sm text-gray-400">Exchanges</Link>
+                          <Link className={`text-sm text-gray-500 hover:text-black ${location.pathname === '/' ? 'font-medium text-black' : 'hover:font-medium'}`} to="/">Cryptocurrencies</Link>
+                          <Link className={`text-sm text-gray-500 hover:text-black ${location.pathname === '/exchanges' ? 'font-medium text-black' : 'hover:font-medium'}`} to="/exchanges">Exchanges</Link>
                       </div>
                   </div>
                   <div className="md:flex flex-row items-center gap-x-2 ms-auto">
