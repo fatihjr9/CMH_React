@@ -1,14 +1,28 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import useStore from "../../store"
 
 function CurrenciesTable() {
+  const [reload, setReload] = useState({})
   const { dataCurrencies, fetchCurrencies } = useStore();
   const [limit, setLimit] = useState(10);
 
   useEffect(() => {
     fetchCurrencies();
+    
+    const timer = setInterval(()=> {
+      fetchCurrencies()
+    },500)
+
+    return () => {clearInterval(timer)}
   }, [fetchCurrencies]);
 
+  const autoReload = (currencyId) => {
+    setReload({
+      ...reload,
+      [currencyId]: new Date().toLocaleTimeString(),
+    });
+  };
   return (
     <div>
       <div className="relative overflow-x-auto rounded-md">
@@ -43,18 +57,18 @@ function CurrenciesTable() {
               </thead>
               <tbody>
                 {dataCurrencies.slice(0, limit).map((currency) => (
-                  <tr key={currency.id} className="bg-gray-50 border-b">
+                  <tr key={currency.id} className={`bg-gray-50 border-b ${autoReload}`}>
                     <th scope="row" key={currency.id} className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap">
                       {currency.rank}
                     </th>
                     <th scope="row" className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap">
-                      <div className="flex flex-row gap-x-2 items-center">
+                      <Link to={`detail-currency/${currency.id}`} className="flex flex-row gap-x-2 items-center">
                         <div className="w-10 h-10 rounded-full bg-blue-100"></div>
                         <div className="flex flex-col gap-y">
                           <h5 className="text-base font-medium">{currency.name}</h5>
                           <p className="text-sm font-normal text-gray-400">{currency.symbol}</p>
                         </div>
-                      </div>
+                      </Link>
                     </th>
                     <td className="px-6 py-3">
                       {currency.priceUsd}

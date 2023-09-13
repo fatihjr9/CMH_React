@@ -72,8 +72,8 @@ const Navbar = () => {
                   <Drawer placement={placement} closable={false} onClose={onClose} open={open} key={placement}>
                     <Input placeholder="Search Cryptocurrencies or exchanges"/>
                     <div className="flex flex-col items-start gap-x-4">
-                      <Link to="/" className="text-lg">Cryptocurrencies</Link>
-                      <Link to="/exchanges" className="text-lg text-gray-400">Exchanges</Link>
+                      <Link className={`text-sm text-gray-500 hover:text-black ${location.pathname === '/' ? 'font-medium text-black' : 'hover:font-medium'}`} to="/">Cryptocurrencies</Link>
+                      <Link className={`text-sm text-gray-500 hover:text-black ${location.pathname === '/exchanges' ? 'font-medium text-black' : 'hover:font-medium'}`} to="/exchanges">Exchanges</Link>
                     </div>
                   </Drawer>
                 </div>

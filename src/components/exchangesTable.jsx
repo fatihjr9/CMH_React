@@ -2,12 +2,26 @@ import { useEffect, useState } from "react";
 import useStore from "../../store"
 
 function ExchangesTable() {
+  const [reload, setReload] = useState({})
   const { dataExchanges, fetchExchanges } = useStore();
   const [limit, setLimit] = useState(10);
 
   useEffect(() => {
     fetchExchanges();
+    
+    const timer = setInterval(()=> {
+      fetchExchanges()
+    },500)
+
+    return () => {clearInterval(timer)}
   }, [fetchExchanges]);
+
+  const autoReload = (exchangeId) => {
+    setReload({
+      ...reload,
+      [exchangeId]: new Date().toLocaleTimeString(),
+    });
+  };
 
   return (
     <div>
@@ -34,7 +48,7 @@ function ExchangesTable() {
               </thead>
               <tbody>
                 {dataExchanges.slice(0, limit).map((exc) => (
-                  <tr key={exc.id} className="bg-gray-50 border-b">
+                  <tr key={exc.id} className={`bg-gray-50 border-b ${autoReload}`}>
                     <th scope="row" key={exc.id} className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap">
                       {exc.rank}
                     </th>
