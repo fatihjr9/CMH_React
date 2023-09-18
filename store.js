@@ -1,64 +1,56 @@
-/* eslint-disable no-undef */
-import { message } from "antd";
 import axios from "axios";
 import { create } from "zustand";
 
-// API Endpoints
-const urlCurrency = 'https://api.coincap.io/v2/assets';
-const urlExchanges = 'https://api.coincap.io/v2/exchanges';
-const urlRates = 'https://api.coincap.io/v2/rates';
+const API_BASE_URL = 'https://api.coincap.io/v2';
 
-// SWR Setting
+let lastNetworkErrorTime = 0;
+const THROTTLE_NETWORK_ERROR_INTERVAL = 5000;
+
 const fetcher = async (url) => {
-  const response = await axios.get(url);
-  return response.data;
+  try {
+    const response = await axios.get(url);
+    return response.data.data || [];
+  } catch (error) {
+    const currentTime = Date.now();
+    if (currentTime - lastNetworkErrorTime >= THROTTLE_NETWORK_ERROR_INTERVAL) {
+      error(`Error fetching data from ${url}: Network Error`);
+      lastNetworkErrorTime = currentTime;
+    }
+  }
 };
 
-// Logical goes here
 const useStore = create((set) => ({
   dataCurrencies: [],
   dataExchanges: [],
   dataRates: [],
-  detailCurrencies: null,
+  detailCurrency: null,
 
   fetchCurrencies: async () => {
-    try {
-      const data = await fetcher(urlCurrency);
-      set({ dataCurrencies: data.data || [] });
-    } catch (error) {
-      message.error("Error fetching currencies: " + error.message);
-    }
+    const data = await fetcher(`${API_BASE_URL}/assets`);
+    set({ dataCurrencies: data });
   },
 
-  fetchDetailCurrencies: async (id) => {
-    try {
-      const detail = `${urlCurrency}/${id}`;
-      const data = await fetcher(detail);
-      set({ detailCurrency: data.data || null });
-    } catch (error) {
-      message.error("Error fetching rate: " + error.message);
-    }
+  calculateTotalMarketCap: () => {
+    const { dataCurrencies } = useStore.getState();
+    return dataCurrencies.reduce((totalMarketCap, currency) => {
+      return totalMarketCap + parseFloat(currency.marketCapUsd || 0);
+    }, 0);
+  },
+
+  fetchDetailCurrency: async (id) => {
+    const data = await fetcher(`${API_BASE_URL}/assets/${id}`);
+    set({ detailCurrency: data[0] || null });
   },
 
   fetchExchanges: async () => {
-    try {
-      const data = await fetcher(urlExchanges);
-      set({ dataExchanges: data.data || [] });
-    } catch (error) {
-      message.error("Error fetching exchanges: " + error.message);
-    }
+    const data = await fetcher(`${API_BASE_URL}/exchanges`);
+    set({ dataExchanges: data });
   },
 
   fetchRates: async () => {
-    try {
-      const data = await fetcher(urlRates);
-      set({ dataRates: data.data || [] });
-    } catch (error) {
-      message.error("Error fetching rate: " + error.message);
-    }
+    const data = await fetcher(`${API_BASE_URL}/rates`);
+    set({ dataRates: data });
   },
-
-  
 }));
 
 export default useStore;

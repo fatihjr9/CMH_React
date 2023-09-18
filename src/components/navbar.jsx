@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Banner from "./banner";
 import { CgMenuMotion } from 'react-icons/cg'
-import { Input, Dropdown, Button, Drawer } from 'antd';
+import { Input, Drawer } from 'antd';
 
 const Navbar = () => {
       const location = useLocation()
@@ -14,34 +14,6 @@ const Navbar = () => {
       const onClose = () => {
         setOpen(false);
       };
-      const handleMenuClick = (e) => {
-        console.log('click', e);
-      };
-      const items = [
-        {
-          label: '1st menu item',
-          key: '1',
-        },
-        {
-          label: '2nd menu item',
-          key: '2',
-        },
-        {
-          label: '3rd menu item',
-          key: '3',
-          danger: true,
-        },
-        {
-          label: '4rd menu item',
-          key: '4',
-          danger: true,
-          disabled: true,
-        },
-      ];
-      const menuProps = {
-        items,
-        onClick: handleMenuClick,
-      };
     return (
         <>
             <Banner/>
@@ -51,18 +23,12 @@ const Navbar = () => {
                   <div className="md:flex flex-row items-center gap-x-6">
                       <h5 className="text-xl font-semibold tracking-tighter">CoinDataHub</h5>
                       <div className="flex flex-row items-center gap-x-4">
-                          <Link className={`text-sm text-gray-500 hover:text-black ${location.pathname === '/' ? 'font-medium text-black' : 'hover:font-medium'}`} to="/">Cryptocurrencies</Link>
-                          <Link className={`text-sm text-gray-500 hover:text-black ${location.pathname === '/exchanges' ? 'font-medium text-black' : 'hover:font-medium'}`} to="/exchanges">Exchanges</Link>
+                          <Link className={`text-sm text-black hover:text-black ${location.pathname === '/' ? 'font-medium text-black' : 'hover:font-medium'}`} to="/">Cryptocurrencies</Link>
+                          <Link className={`text-sm text-black hover:text-black ${location.pathname === '/exchanges' ? 'font-medium text-black' : 'hover:font-medium'}`} to="/exchanges">Exchanges</Link>
                       </div>
                   </div>
                   <div className="md:flex flex-row items-center gap-x-2 ms-auto">
                       <Input placeholder="Search Cryptocurrencies or exchanges"/>
-                      <Dropdown menu={menuProps}>
-                        <Button>USD</Button>
-                      </Dropdown>
-                      <Dropdown menu={menuProps}>
-                        <Button>English</Button>
-                      </Dropdown>
                   </div>
                 </div>
               {/* Mobile */}

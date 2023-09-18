@@ -7,22 +7,24 @@ function CurrenciesTable() {
   const { dataCurrencies, fetchCurrencies } = useStore();
   const [limit, setLimit] = useState(10);
 
-  useEffect(() => {
-    fetchCurrencies();
-    
-    const timer = setInterval(()=> {
-      fetchCurrencies()
-    },500)
-
-    return () => {clearInterval(timer)}
-  }, [fetchCurrencies]);
-
   const autoReload = (currencyId) => {
     setReload({
       ...reload,
       [currencyId]: new Date().toLocaleTimeString(),
     });
   };
+
+  useEffect(() => {
+    fetchCurrencies();
+    
+    const timer = setInterval(()=> {
+      fetchCurrencies()
+    },10)
+
+    return () => {clearInterval(timer)}
+  }, [fetchCurrencies]);
+
+  
   return (
     <div>
       <div className="relative overflow-x-auto rounded-md">
